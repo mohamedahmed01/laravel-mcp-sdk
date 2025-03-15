@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<ruleset name="Laravel MCP Coding Standard">
+    <description>The coding standard for Laravel MCP.</description>
+
+    <file>src</file>
+    <file>tests</file>
+
+    <arg name="basepath" value="."/>
+    <arg name="colors"/>
+    <arg name="parallel" value="75"/>
+    <arg value="np"/>
+
+    <!-- Use the PSR12 Standard-->
+    <rule ref="PSR12"/>
+
+    <!-- Allow long lines -->
+    <rule ref="Generic.Files.LineLength">
+        <properties>
+            <property name="lineLimit" value="120"/>
+            <property name="absoluteLineLimit" value="0"/>
+        </properties>
+    </rule>
+
+    <!-- Exclude some rules for tests -->
+    <rule ref="PSR1.Classes.ClassDeclaration.MissingNamespace">
+        <exclude-pattern>tests/*</exclude-pattern>
+    </rule>
+</ruleset> 

@@ -1,0 +1,65 @@
+# Dependencies
+/vendor
+composer.lock
+clover.xml
+# IDE and Editor Files
+.idea/
+.vscode/
+*.sublime-project
+*.sublime-workspace
+*.code-workspace
+.project
+.settings/
+.classpath
+.buildpath
+*.swp
+*.swo
+*~
+
+# Testing and Coverage
+/coverage
+.phpunit.result.cache
+.phpunit.cache
+phpunit.xml.bak
+.php_cs.cache
+.php-cs-fixer.cache
+
+# Environment Files
+.env
+.env.backup
+.env.*.local
+
+# Operating System Files
+.DS_Store
+Thumbs.db
+*.log
+
+# Build and Distribution
+/build
+/dist
+*.phar
+
+# Cache and Temporary Files
+*.cache
+*.tmp
+*.temp
+
+# Local Development
+/storage/*.key
+/.vagrant
+/node_modules
+npm-debug.log
+yarn-error.log
+*.hot-update.js
+*.hot-update.json
+
+# Documentation
+/docs/_build/
+/docs/_static/
+/docs/_templates/
+
+# Misc
+*.bak
+*.orig
+.php_cs
+.php_cs.dist 
