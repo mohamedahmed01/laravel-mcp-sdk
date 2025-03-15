@@ -1,0 +1,918 @@
+<!DOCTYPE html>
+<html lang="en" class="no-js">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Laravel MCP - Model Context Protocol for Laravel</title>
+    <meta name="description" content="A Laravel package for implementing the Model Context Protocol (MCP), facilitating seamless communication between AI models and Laravel applications.">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@1/css/pico.min.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-okaidia.min.css" rel="stylesheet" />
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.css" rel="stylesheet" />
+    <style>
+        :root {
+            --primary: #ff2d20;
+            --primary-hover: #ff4133;
+            --background-light: #f8fafc;
+            --text-main: #1a202c;
+            --text-light: #4a5568;
+            --border-color: #e2e8f0;
+            --code-bg: #2d3748;
+            --code-color: #e2e8f0;
+        }
+        
+        body {
+            color: var(--text-main);
+            background: white;
+        }
+        
+        .container { 
+            max-width: 1200px; 
+            margin: 0 auto; 
+            padding: 1rem;
+        }
+        
+        .hero { 
+            text-align: center; 
+            padding: 0; 
+            background: #1F2937;
+            color: white;
+            margin-bottom: 4rem;
+            position: relative;
+            height: 640px;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .hero-content {
+            position: relative;
+            z-index: 2;
+            padding: 2rem 0;
+            margin-top: auto;
+            padding-bottom: 2rem;
+            background: linear-gradient(to top, rgba(31, 41, 55, 0.95), rgba(31, 41, 55, 0) 100%);
+        }
+        
+        .hero-banner {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1;
+        }
+        
+        .hero h1 {
+            font-size: 4rem;
+            margin-bottom: 1rem;
+            position: relative;
+            text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+        
+        .hero p {
+            font-size: 1.5rem;
+            opacity: 0.9;
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        
+        .hero .badge {
+            background: rgba(255,255,255,0.1);
+            border: 1px solid rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+        }
+        
+        .features { 
+            display: grid; 
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); 
+            gap: 2rem; 
+            padding: 2rem 0;
+        }
+        
+        .feature-card { 
+            padding: 2rem;
+            border-radius: 12px;
+            background: white;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+            border: 1px solid var(--border-color);
+            height: 100%;
+        }
+        
+        .code-block { 
+            background: var(--code-bg);
+            padding: 1.5rem;
+            border-radius: 8px;
+            overflow-x: auto;
+            margin: 1rem 0;
+            position: relative;
+        }
+        
+        .code-block::before {
+            content: attr(data-language);
+            position: absolute;
+            top: 0;
+            right: 0;
+            padding: 0.25rem 0.75rem;
+            font-size: 0.8rem;
+            color: #94A3B8;
+            background: rgba(0,0,0,0.2);
+            border-bottom-left-radius: 6px;
+        }
+
+        .line-numbers .line-numbers-rows {
+            border-right: 1px solid #4B5563;
+            padding: 1rem 0;
+        }
+        
+        pre { 
+            margin: 0;
+            padding: 0;
+        }
+        
+        code { 
+            font-family: 'Fira Code', monospace;
+            color: var(--code-color) !important;
+            background: transparent !important;
+            text-shadow: none;
+            font-size: 0.9rem;
+            line-height: 1.5;
+        }
+        
+        .tabs { 
+            display: flex; 
+            gap: 1rem; 
+            margin-bottom: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            padding-bottom: 1rem;
+            position: sticky;
+            top: 0;
+            background: white;
+            z-index: 10;
+        }
+        
+        .tab { 
+            cursor: pointer; 
+            padding: 0.75rem 1.5rem;
+            border-radius: 6px;
+            color: var(--text-light);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+        
+        .tab.active { 
+            background: var(--primary); 
+            color: white;
+        }
+        
+        .example-section { 
+            margin: 3rem 0;
+            padding: 2rem;
+            background: white;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 6px rgba(0,0,0,0.05);
+        }
+        
+        .example-description {
+            color: var(--text-light);
+            margin-bottom: 1.5rem;
+            font-size: 1.1rem;
+            line-height: 1.6;
+        }
+        
+        .badge { 
+            display: inline-block; 
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            background: rgba(255,255,255,0.2);
+            margin: 0.25rem;
+            font-weight: 500;
+        }
+        
+        .icon { 
+            font-size: 2.5rem; 
+            margin-bottom: 1.5rem;
+            background: linear-gradient(45deg, var(--primary), var(--primary-hover));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+        
+        nav {
+            background: white;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+        }
+        
+        .nav-logo { 
+            text-decoration: none; 
+            color: inherit;
+            font-size: 1.25rem;
+            font-weight: 600;
+        }
+        
+        .nav-logo:hover { text-decoration: none; }
+        
+        .component-link { 
+            text-decoration: none; 
+            color: inherit;
+            display: block;
+            height: 100%;
+        }
+        
+        .component-link:hover { transform: translateY(-2px); }
+        
+        .feature-card { transition: transform 0.2s, box-shadow 0.2s; }
+        
+        .feature-card:hover { 
+            transform: translateY(-2px);
+            box-shadow: 0 8px 12px rgba(0,0,0,0.1);
+        }
+        
+        .tab:hover:not(.active) { 
+            background: var(--background-light);
+        }
+        
+        .external-link { 
+            display: inline-flex; 
+            align-items: center; 
+            gap: 0.25rem;
+            color: var(--primary);
+            font-weight: 500;
+        }
+        
+        .external-link::after { 
+            content: '↗'; 
+            font-size: 0.8em;
+        }
+
+        section {
+            margin-bottom: 6rem;
+            scroll-margin-top: 2rem;
+        }
+
+        h2 {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+            color: var(--text-main);
+            font-weight: 700;
+        }
+
+        h3 {
+            color: var(--text-main);
+            margin-bottom: 1.5rem;
+            font-size: 1.75rem;
+            font-weight: 600;
+        }
+
+        .section-description {
+            color: var(--text-light);
+            font-size: 1.2rem;
+            margin-bottom: 3rem;
+            max-width: 800px;
+            line-height: 1.6;
+        }
+
+        .feature-card h3 {
+            margin-top: 1rem;
+            font-size: 1.5rem;
+        }
+
+        .feature-card ul {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+            color: var(--text-light);
+        }
+
+        .feature-card ul li {
+            margin-bottom: 0.75rem;
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            font-size: 1.1rem;
+        }
+
+        .feature-card ul li::before {
+            content: "•";
+            color: var(--primary);
+            font-size: 1.5rem;
+        }
+
+        footer {
+            background: var(--background-light);
+            padding: 4rem 0;
+            margin-top: 6rem;
+        }
+
+        .footer-content {
+            text-align: center;
+            color: var(--text-light);
+        }
+
+        .footer-links {
+            margin-top: 2rem;
+        }
+
+        .footer-links a {
+            color: var(--text-main);
+            text-decoration: none;
+            margin: 0 1.5rem;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .footer-links a:hover {
+            color: var(--primary);
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                height: auto;
+                min-height: 640px;
+            }
+            
+            .hero h1 {
+                font-size: 2.5rem;
+            }
+            
+            .hero p {
+                font-size: 1.25rem;
+            }
+            
+            .features {
+                grid-template-columns: 1fr;
+            }
+            
+            .tabs {
+                flex-wrap: wrap;
+            }
+
+            h2 {
+                font-size: 2rem;
+            }
+
+            .section-description {
+                font-size: 1.1rem;
+            }
+        }
+
+        /* Code block improvements */
+        pre[class*="language-"] {
+            margin: 0;
+            padding: 1rem;
+            background: var(--code-bg) !important;
+        }
+
+        code[class*="language-"] {
+            font-family: 'Fira Code', Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+            font-size: 0.9rem;
+            line-height: 1.5;
+            text-shadow: none !important;
+            background: transparent !important;
+            padding: 0 !important;
+        }
+
+        .line-numbers .line-numbers-rows {
+            border-right: 1px solid #4B5563;
+            padding: 1rem 0;
+        }
+
+        .line-numbers .line-numbers-rows > span:before {
+            color: #6B7280;
+            padding-right: 1em;
+        }
+
+        :not(pre) > code[class*="language-"],
+        pre[class*="language-"] {
+            background: var(--code-bg) !important;
+        }
+
+        /* Token colors */
+        .token.comment { color: #6B7280; }
+        .token.function { color: #60A5FA; }
+        .token.keyword { color: #F472B6; }
+        .token.string { color: #34D399; }
+        .token.number { color: #F59E0B; }
+        .token.operator { color: #8B5CF6; }
+        .token.punctuation { color: #9CA3AF; }
+        .token.property { color: #60A5FA; }
+        .token.class-name { color: #34D399; }
+        .token.namespace { color: #F472B6; }
+    </style>
+</head>
+<body>
+    <nav class="container">
+        <ul>
+            <li><a href="#" class="nav-logo"><strong>Laravel MCP</strong></a></li>
+        </ul>
+        <ul>
+            <li><a href="#features">Features</a></li>
+            <li><a href="#documentation">Documentation</a></li>
+            <li><a href="#examples">Examples</a></li>
+            <li><a href="#components">Components</a></li>
+            <li><a href="#installation">Installation</a></li>
+            <li><a href="https://github.com/mohamedahmed01/laravel-mcp-sdk" class="external-link" target="_blank">GitHub</a></li>
+        </ul>
+    </nav>
+
+    <main>
+        <section class="hero" id="home">
+            <div class="hero-content container">
+                <h1>Laravel MCP</h1>
+                <p>A powerful Laravel package for implementing the Model Context Protocol</p>
+                <div>
+                    <span class="badge">PHP 8.1+</span>
+                    <span class="badge">Laravel 10.x</span>
+                    <span class="badge">MIT License</span>
+                </div>
+                <div style="margin-top: 2rem;">
+                    <a href="#installation" role="button" class="contrast">Get Started</a>
+                    <a href="#documentation" role="button">Documentation</a>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" id="features">
+            <h2>Key Features</h2>
+            <p class="section-description">
+                Laravel MCP provides a robust set of tools and capabilities for seamless integration between Laravel applications and AI models.
+            </p>
+            <div class="features">
+                <a href="#transports" class="component-link">
+                    <div class="feature-card">
+                        <div class="icon">🔌</div>
+                        <h3>Multiple Transports</h3>
+                        <ul>
+                            <li>HTTP Transport (RESTful)</li>
+                            <li>WebSocket (Real-time)</li>
+                            <li>Stdio (CLI)</li>
+                            <li>Configurable Settings</li>
+                        </ul>
+                    </div>
+                </a>
+                <a href="#tools" class="component-link">
+                    <div class="feature-card">
+                        <div class="icon">🛠️</div>
+                        <h3>Tool System</h3>
+                        <ul>
+                            <li>Custom Tool Registration</li>
+                            <li>Parameter Validation</li>
+                            <li>Structured Responses</li>
+                            <li>Error Handling</li>
+                        </ul>
+                    </div>
+                </a>
+                <a href="#resources" class="component-link">
+                    <div class="feature-card">
+                        <div class="icon">📦</div>
+                        <h3>Resource Management</h3>
+                        <ul>
+                            <li>URI-based Access</li>
+                            <li>Resource Templates</li>
+                            <li>Dynamic Handling</li>
+                            <li>Content Type Support</li>
+                        </ul>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="container" id="documentation">
+            <h2>Documentation</h2>
+            <p class="section-description">
+                Get started quickly with our comprehensive documentation and examples.
+            </p>
+            <div class="example-section">
+                <div class="tabs">
+                    <a href="#installation-tab" class="tab active" onclick="switchTab(event, 'installation-content')">Installation</a>
+                    <a href="#configuration-tab" class="tab" onclick="switchTab(event, 'configuration-content')">Configuration</a>
+                    <a href="#usage-tab" class="tab" onclick="switchTab(event, 'usage-content')">Usage</a>
+                </div>
+                <div id="installation-content" class="code-block tab-content">
+                    <pre class="language-bash line-numbers"><code># Install via Composer
+composer require laravelmcp/mcp
+
+# Publish configuration
+php artisan vendor:publish --provider="LaravelMCP\MCP\MCPServiceProvider" --tag="config"
+
+# Configure environment
+MCP_SERVER_HOST=127.0.0.1
+MCP_SERVER_PORT=8080
+MCP_SERVER_TRANSPORT=http</code></pre>
+                </div>
+                <div id="configuration-content" class="code-block tab-content" style="display: none;">
+                    <pre class="language-php line-numbers"><code># Configuration file: config/mcp.php
+return [
+    'server' => [
+        'host' => env('MCP_SERVER_HOST', '127.0.0.1'),
+        'port' => env('MCP_SERVER_PORT', 8080),
+        'transport' => env('MCP_SERVER_TRANSPORT', 'http')
+    ],
+    'logging' => [
+        'enabled' => true,
+        'level' => 'debug'
+    ]
+];</code></pre>
+                </div>
+                <div id="usage-content" class="code-block tab-content" style="display: none;">
+                    <pre class="language-php line-numbers"><code><?php
+
+use LaravelMCP\MCP\Facades\MCP;
+use LaravelMCP\MCP\Server\FastMCP;
+
+// Initialize MCP Server
+$mcp = new FastMCP();
+
+// 1. Basic Tool Registration
+$mcp->tool('analyze-text', [
+    'text' => ['type' => 'string', 'required' => true],
+    'language' => ['type' => 'string', 'default' => 'en'],
+    'options' => ['type' => 'object', 'properties' => [
+        'sentiment' => ['type' => 'boolean', 'default' => true],
+        'keywords' => ['type' => 'boolean', 'default' => true]
+    ]]
+])(function ($args) {
+    return [
+        'sentiment' => analyzeSentiment($args['text']),
+        'keywords' => extractKeywords($args['text']),
+        'language' => $args['language']
+    ];
+});</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" id="examples">
+            <h2>Code Examples</h2>
+            <p class="section-description">
+                Explore practical examples of Laravel MCP in action.
+            </p>
+            
+            <div class="example-section" id="code-review">
+                <h3>AI-Powered Code Review</h3>
+                <div class="code-block">
+                    <pre class="language-php line-numbers"><code>use LaravelMCP\MCP\Server\FastMCP;
+
+$mcp = new FastMCP();
+
+// Register code review tool
+$mcp->tool('review-code', [
+    'code' => ['type' => 'string', 'required' => true],
+    'language' => ['type' => 'string', 'required' => true],
+    'style' => ['type' => 'string', 'enum' => ['serious', 'fun']]
+])(function ($args) use ($mcp) {
+    // Analyze code and provide AI-powered suggestions
+    $suggestions = $mcp->prompt('suggest-improvements', [
+        'code' => $args['code'],
+        'language' => $args['language']
+    ]);
+    
+    return [
+        'suggestions' => $suggestions,
+        'complexity' => analyzeComplexity($args['code'])
+    ];
+});</code></pre>
+                </div>
+            </div>
+
+            <div class="example-section" id="resources">
+                <h3>Resource Management</h3>
+                <div class="code-block">
+                    <pre class="language-php line-numbers"><code>// Register a file resource
+$mcp->resource('file://{path}')(function ($matches) {
+    return [
+        'content' => file_get_contents($matches['path']),
+        'metadata' => [
+            'size' => filesize($matches['path']),
+            'modified' => filemtime($matches['path'])
+        ]
+    ];
+});</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" id="llm-agent">
+            <h2>LLM Agent Example</h2>
+            <p class="section-description">
+                Create a powerful AI agent that can analyze code, suggest improvements, and interact with your Laravel application using the Model Context Protocol.
+            </p>
+            
+            <div class="example-section">
+                <h3>Complete Agent Implementation</h3>
+                <div class="code-block" data-language="PHP">
+                    <pre class="language-php line-numbers"><code><?php
+
+namespace App\Services;
+
+use LaravelMCP\MCP\Server\FastMCP;
+use LaravelMCP\MCP\Contracts\MCPServerInterface;
+use Illuminate\Support\Facades\Log;
+
+class CodeReviewAgent
+{
+    protected MCPServerInterface $mcp;
+    protected array $capabilities;
+
+    public function __construct()
+    {
+        $this->mcp = new FastMCP();
+        $this->setupAgent();
+    }
+
+    protected function setupAgent(): void
+    {
+        // Register code analysis tools
+        $this->registerCodeAnalysisTools();
+        
+        // Register file system resources
+        $this->registerFileResources();
+        
+        // Register AI prompts
+        $this->registerPrompts();
+        
+        // Setup event handlers
+        $this->setupEventHandlers();
+    }
+
+    protected function registerCodeAnalysisTools(): void
+    {
+        // Tool for analyzing code complexity
+        $this->mcp->tool('analyze-complexity', [
+            'code' => ['type' => 'string', 'required' => true],
+            'metrics' => ['type' => 'array', 'items' => ['type' => 'string'], 'default' => ['cyclomatic', 'cognitive']]
+        ])(function ($args) {
+            return [
+                'complexity_score' => $this->calculateComplexity($args['code'], $args['metrics']),
+                'suggestions' => $this->generateSuggestions($args['code'])
+            ];
+        });
+
+        // Tool for checking coding standards
+        $this->mcp->tool('check-standards', [
+            'path' => ['type' => 'string', 'required' => true],
+            'standard' => ['type' => 'string', 'default' => 'PSR12']
+        ])(function ($args) {
+            return $this->runCodeSniffer($args['path'], $args['standard']);
+        });
+    }
+
+    protected function registerFileResources(): void
+    {
+        // Register project files resource
+        $this->mcp->resource('project://{path}', [
+            'path' => ['type' => 'string', 'pattern' => '^[a-zA-Z0-9/_-]+\.[a-zA-Z0-9]+$']
+        ])(function ($matches) {
+            $fullPath = base_path($matches['path']);
+            return [
+                'content' => file_get_contents($fullPath),
+                'metadata' => [
+                    'size' => filesize($fullPath),
+                    'modified' => filemtime($fullPath),
+                    'type' => pathinfo($fullPath, PATHINFO_EXTENSION)
+                ]
+            ];
+        });
+    }
+
+    protected function registerPrompts(): void
+    {
+        // Register AI code review prompt
+        $this->mcp->prompt('review-code', [
+            'code' => ['type' => 'string', 'required' => true],
+            'context' => ['type' => 'object', 'properties' => [
+                'language' => ['type' => 'string'],
+                'framework' => ['type' => 'string'],
+                'style' => ['type' => 'string', 'enum' => ['detailed', 'summary']]
+            ]]
+        ])(function ($args) {
+            // First analyze code complexity
+            $analysis = $this->mcp->tool('analyze-complexity')->call([
+                'code' => $args['code']
+            ]);
+
+            // Check coding standards
+            $standards = $this->mcp->tool('check-standards')->call([
+                'path' => $this->saveTemporaryFile($args['code'])
+            ]);
+
+            // Generate AI-powered review
+            return [
+                'review' => $this->generateAIReview($args['code'], $analysis, $standards),
+                'complexity' => $analysis['complexity_score'],
+                'standards_issues' => $standards['issues'],
+                'suggestions' => $this->prioritizeSuggestions($analysis['suggestions'])
+            ];
+        });
+    }
+
+    protected function setupEventHandlers(): void
+    {
+        // Log all tool calls
+        $this->mcp->on('tool.called', function ($event) {
+            Log::info("Tool called: {$event->tool}", [
+                'args' => $event->args,
+                'timestamp' => now()
+            ]);
+        });
+
+        // Handle progress updates
+        $this->mcp->on('progress', function ($progress) {
+            Log::debug("Analysis progress: {$progress->percentage}%", [
+                'message' => $progress->message
+            ]);
+        });
+
+        // Handle errors
+        $this->mcp->on('error', function ($error) {
+            Log::error("MCP Error: {$error->message}", [
+                'code' => $error->code,
+                'context' => $error->context
+            ]);
+        });
+    }
+
+    public function reviewFile(string $path, array $options = []): array
+    {
+        try {
+            // Read file content using resource
+            $file = $this->mcp->resource('project://' . $path)->get();
+
+            // Send progress update
+            $this->mcp->sendProgress(25, "Reading file contents");
+
+            // Perform code review using prompt
+            $review = $this->mcp->prompt('review-code')->call([
+                'code' => $file['content'],
+                'context' => [
+                    'language' => pathinfo($path, PATHINFO_EXTENSION),
+                    'framework' => 'laravel',
+                    'style' => $options['style'] ?? 'detailed'
+                ]
+            ]);
+
+            $this->mcp->sendProgress(100, "Review completed");
+
+            return [
+                'success' => true,
+                'review' => $review,
+                'file_info' => $file['metadata']
+            ];
+
+        } catch (\Exception $e) {
+            Log::error("Review failed: " . $e->getMessage());
+            return [
+                'success' => false,
+                'error' => $e->getMessage()
+            ];
+        }
+    }
+
+    // Helper methods (implementation details omitted for brevity)
+    protected function calculateComplexity(string $code, array $metrics): array { /* ... */ }
+    protected function generateSuggestions(string $code): array { /* ... */ }
+    protected function runCodeSniffer(string $path, string $standard): array { /* ... */ }
+    protected function generateAIReview(string $code, array $analysis, array $standards): array { /* ... */ }
+    protected function prioritizeSuggestions(array $suggestions): array { /* ... */ }
+    protected function saveTemporaryFile(string $content): string { /* ... */ }
+}
+</code></pre>
+                </div>
+
+                <h3 class="mt-4">Usage Example</h3>
+                <div class="code-block" data-language="PHP">
+                    <pre class="language-php line-numbers"><code><?php
+
+use App\Services\CodeReviewAgent;
+
+// Create agent instance
+$agent = new CodeReviewAgent();
+
+// Review a specific file
+$review = $agent->reviewFile('app/Http/Controllers/UserController.php', [
+    'style' => 'detailed'
+]);
+
+if ($review['success']) {
+    echo "Review completed successfully!\n";
+    echo "Complexity Score: " . $review['review']['complexity'] . "\n";
+    echo "Standards Issues: " . count($review['review']['standards_issues']) . "\n";
+    
+    // Print suggestions
+    foreach ($review['review']['suggestions'] as $suggestion) {
+        echo "- {$suggestion['description']}\n";
+    }
+} else {
+    echo "Review failed: " . $review['error'] . "\n";
+}</code></pre>
+                </div>
+            </div>
+        </section>
+
+        <section class="container" id="components">
+            <h2>Core Components</h2>
+            <p class="section-description">
+                Explore the building blocks that make Laravel MCP powerful and flexible.
+            </p>
+            <div class="features">
+                <a href="src/Capabilities/ServerCapabilities.php" class="component-link">
+                    <div class="feature-card">
+                        <h3>Server Capabilities</h3>
+                        <p>Manage server features, experimental flags, and logging configuration.</p>
+                        <div class="badge">src/Capabilities/ServerCapabilities.php</div>
+                    </div>
+                </a>
+                <a href="src/Capabilities/ClientCapabilities.php" class="component-link">
+                    <div class="feature-card">
+                        <h3>Client Capabilities</h3>
+                        <p>Handle feature flags, root directories, and state management.</p>
+                        <div class="badge">src/Capabilities/ClientCapabilities.php</div>
+                    </div>
+                </a>
+                <a href="src/Capabilities/ToolsCapability.php" class="component-link">
+                    <div class="feature-card">
+                        <h3>Tools Capability</h3>
+                        <p>Track and manage tool registration and modifications.</p>
+                        <div class="badge">src/Capabilities/ToolsCapability.php</div>
+                    </div>
+                </a>
+            </div>
+        </section>
+
+        <section class="container" id="installation">
+            <h2>Getting Started</h2>
+            <p class="section-description">
+                Follow these simple steps to integrate Laravel MCP into your project.
+            </p>
+            <ol>
+                <li>
+                    <strong>Install the Package</strong>
+                    <div class="code-block" data-language="bash">
+                        <pre class="language-bash line-numbers"><code>composer require laravelmcp/mcp</code></pre>
+                    </div>
+                </li>
+                <li>
+                    <strong>Configure Environment</strong>
+                    <div class="code-block" data-language="bash">
+                        <pre class="language-bash line-numbers"><code>MCP_SERVER_HOST=127.0.0.1
+MCP_SERVER_PORT=8080
+MCP_SERVER_TRANSPORT=http</code></pre>
+                    </div>
+                </li>
+                <li>
+                    <strong>Start the Server</strong>
+                    <div class="code-block" data-language="bash">
+                        <pre class="language-bash line-numbers"><code>php artisan mcp:serve</code></pre>
+                    </div>
+                </li>
+            </ol>
+        </section>
+    </main>
+
+    <footer>
+        <div class="container footer-content">
+            <p>
+                Laravel MCP is open-source software licensed under the MIT license.<br>
+                <small>Created with ❤️ for the Laravel community</small>
+            </p>
+            <div class="footer-links">
+                <a href="#home">Back to top</a>
+                <a href="https://github.com/laravelmcp/mcp" target="_blank" class="external-link">GitHub</a>
+                <a href="https://packagist.org/packages/laravelmcp/mcp" target="_blank" class="external-link">Packagist</a>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/line-numbers/prism-line-numbers.min.js"></script>
+    <script>
+        // Initialize Prism.js
+        Prism.plugins.autoloader.languages_path = 'https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/';
+        
+        // Add line-numbers class to all code blocks
+        document.querySelectorAll('pre').forEach(block => {
+            block.classList.add('line-numbers');
+        });
+
+        // Re-highlight when switching tabs
+        function switchTab(event, contentId) {
+            event.preventDefault();
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.style.display = 'none';
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.getElementById(contentId).style.display = 'block';
+            event.target.classList.add('active');
+            
+            // Re-highlight the newly visible code block
+            Prism.highlightAllUnder(document.getElementById(contentId));
+        }
+    </script>
+</body>
+</html> 
