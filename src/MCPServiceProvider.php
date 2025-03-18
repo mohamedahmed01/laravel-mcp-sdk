@@ -84,7 +84,7 @@ class MCPServiceProvider extends ServiceProvider
         if ($this->app->runningInConsole()) {
             $this->publishes([
                 __DIR__ . '/../config/mcp.php' => config_path('mcp.php'),
-            ], 'mcp-config');
+            ], 'config');
 
             $this->commands([
                 MCPServerCommand::class,
