@@ -3,10 +3,12 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use LaravelMCP\MCP\Contracts\MCPServerInterface;
+use LaravelMCP\MCP\Server\MCPServer;
 use LaravelMCP\MCP\Transport\WebSocketTransport;
+use React\EventLoop\Loop;
 
 // Create a simple server implementation with real-time updates
-class RealTimeServer implements MCPServerInterface
+class RealTimeServer extends MCPServer implements MCPServerInterface
 {
     private array $clients = [];
 
@@ -95,7 +97,7 @@ class RealTimeServer implements MCPServerInterface
 $server = new RealTimeServer();
 
 // Create WebSocket transport
-$transport = new WebSocketTransport($server, [
+$transport = new WebSocketTransport(Loop::get(), $server, [
     'host' => '127.0.0.1',
     'port' => 8080
 ]);

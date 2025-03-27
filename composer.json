@@ -25,6 +25,7 @@
         "cboden/ratchet": "^0.4.4",
         "guzzlehttp/guzzle": "^7.0",
         "illuminate/support": "^10.0",
+        "ratchet/pawl": "^0.4.3",
         "react/http": "^1.9",
         "react/socket": "^1.12"
     },

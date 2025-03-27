@@ -4,14 +4,8 @@ require __DIR__ . '/../vendor/autoload.php';
 
 use LaravelMCP\MCP\MCPClient;
 
-// Configure the client
-config([
-    'mcp.base_url' => 'http://127.0.0.1:8080',
-    'mcp.api_key' => 'test-key'
-]);
-
 // Create client instance
-$client = new MCPClient();
+$client = new MCPClient(baseUrl: 'http://127.0.0.1:8080',apiKey: 'test-key');
 
 // Example 1: Tool Call
 try {

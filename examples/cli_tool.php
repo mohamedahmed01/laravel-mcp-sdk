@@ -3,10 +3,11 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use LaravelMCP\MCP\Contracts\MCPServerInterface;
+use LaravelMCP\MCP\Server\MCPServer;
 use LaravelMCP\MCP\Transport\StdioTransport;
 
 // Create a CLI tool server implementation
-class CLIToolServer implements MCPServerInterface
+class CLIToolServer extends MCPServer implements MCPServerInterface
 {
     public function handleToolCall(string $name, array $arguments = []): array
     {

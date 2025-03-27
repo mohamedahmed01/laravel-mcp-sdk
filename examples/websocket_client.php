@@ -5,10 +5,8 @@ require __DIR__ . '/../vendor/autoload.php';
 use Ratchet\Client\WebSocket;
 use React\EventLoop\Loop;
 
-$loop = Loop::get();
-
 // Connect to WebSocket server
-\Ratchet\Client\connect('ws://127.0.0.1:8080')->then(function(WebSocket $conn) {
+\Ratchet\Client\connect('ws://127.0.0.1:8080', [], [], $loop = Loop::get())->then(function(WebSocket $conn) {
     // Example 1: Tool Call with progress updates
     $conn->send(json_encode([
         'type' => 'tool_call',
@@ -58,4 +56,4 @@ $loop = Loop::get();
 });
 
 // Run the event loop
-$loop->run(); 
+$loop->run();
