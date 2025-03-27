@@ -3,10 +3,11 @@
 require __DIR__ . '/../vendor/autoload.php';
 
 use LaravelMCP\MCP\Contracts\MCPServerInterface;
+use LaravelMCP\MCP\Server\MCPServer;
 use LaravelMCP\MCP\Transport\HttpTransport;
 
 // Create a simple server implementation
-class SimpleServer implements MCPServerInterface
+class SimpleServer extends MCPServer implements MCPServerInterface
 {
     public function handleToolCall(string $name, array $arguments = []): array
     {
