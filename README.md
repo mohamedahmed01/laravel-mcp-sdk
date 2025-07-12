@@ -2,6 +2,8 @@
 
 A Laravel package for implementing the Model Context Protocol (MCP) in Laravel applications. This protocol facilitates communication between AI models and Laravel applications through standardized interfaces.
 
+:star: **[We are now Featured on mcphub](https://mcphub.com/mcp-servers/mohamedahmed01/laravel-mcp-sdk)**
+
 📚 **[View Full Documentation](https://mohamedahmed01.github.io/laravel-mcp-sdk/)**
 
 ## Requirements
